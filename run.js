@@ -18,6 +18,12 @@ if (process.argv.length > 4) {
 }
 console.log("Using block = " + blockNum)
 
+var outputPath = null;
+if (process.argv.length > 5) {
+	outputPath = process.argv[5]
+}
+console.log("Using output path = " + outputPath)
+
 function parseBool(val) { return val === true || val === "true" }
 
 async function main() {
@@ -30,13 +36,15 @@ async function main() {
 		console.log(finalImageData.error);
 	} else {
 		// determine the render path
-		var path = "renders/token-" + tokenId + "_block-" + finalImageData.blockNum + ".jpg";
+		if (outputPath == null) {
+			outputPath = "renders/token-" + tokenId + "_block-" + finalImageData.blockNum + ".jpg";
+		}
 		// output to console
-		console.log("Writing to " + path + "...");
+		console.log("Writing to " + outputPath + "...");
 		// write the final artwork
-		finalImageData.image.write(path);
+		finalImageData.image.write(outputPath);
 		// output to console
-		console.log("Wrote to " + path + ".");
+		console.log("Wrote to " + outputPath + ".");
 	}
 }
 
