@@ -19,6 +19,7 @@ const KEY_FIXED_POSITION = "fixed-position";
 const KEY_RELATIVE_POSITION = "relative-position";
 const KEY_X = "x";
 const KEY_Y = "y";
+const KEY_MULTIPLIER = "multiplier";
 const KEY_VISIBLE = "visible";
 const KEY_URI = "uri";
 const KEY_STATES = "states";
@@ -189,6 +190,12 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 	// rotate the layer (optionally)
 	if (KEY_FIXED_ROTATION in layer) {
 		var rotation = await readIntProperty(contract, layer, KEY_FIXED_ROTATION, "Layer Fixed Rotation", masterArtTokenId);
+
+		if (KEY_MULTIPLIER in layer[KEY_FIXED_ROTATION]) {
+			var multiplier = await readIntProperty(contract, layer[KEY_FIXED_ROTATION], KEY_MULTIPLIER, "Rotation Multiplier", masterArtTokenId);
+
+			rotation *= multiplier;
+		}
 
 		layerImage.rotate(rotation, true);
 
