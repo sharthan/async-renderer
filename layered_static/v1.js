@@ -10,6 +10,7 @@ const KEY_SCALE = "scale";
 const KEY_COLOR = "color";
 const KEY_ALPHA = "alpha";
 const KEY_HUE = "hue";
+const KEY_MULTIPLY = "multiply";
 
 const KEY_RED = "red";
 const KEY_GREEN = "green";
@@ -276,6 +277,8 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 	x -= (bitmapWidth / 2);
 	y -= (bitmapHeight / 2);
 
+	var compositeOptions = {};
+
 	// adjust the color
 	if (KEY_COLOR in layer) {
 		if (KEY_RED in layer[KEY_COLOR]) {
@@ -319,10 +322,18 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 
 			layerImage.opacity(alpha / 100);
 		}
+
+		if (KEY_MULTIPLY in layer[KEY_COLOR]) {
+			var shouldMultiply = ((await readIntProperty(contract, layer[KEY_COLOR], KEY_MULTIPLY, "Layer Color Should Multiply", masterArtTokenId)) > 0);
+
+			if (shouldMultiply) {				
+				compositeOptions.mode = Jimp.BLEND_MULTIPLY;
+			}			
+		}
 	}
 
 	// composite this layer onto the current image
-	currentImage.composite(layerImage, x, y);
+	currentImage.composite(layerImage, x, y, compositeOptions);
 
 	return currentImage;
 }
