@@ -10,7 +10,10 @@ const KEY_SCALE = "scale";
 const KEY_COLOR = "color";
 const KEY_ALPHA = "alpha";
 const KEY_HUE = "hue";
+
 const KEY_MULTIPLY = "multiply";
+const KEY_LIGHTEN = "lighten";
+const KEY_OVERLAY = "overlay";
 
 const KEY_RED = "red";
 const KEY_GREEN = "green";
@@ -53,7 +56,7 @@ async function render(contract, layout, _blockNum, masterArtTokenId) {
 
 		console.log("rendering layer: " + (i + 1) + " of " + layout.layers.length + " (" + layer.id + ")")
 
-		if (KEY_STATES in layer) {
+		while (KEY_STATES in layer) {
 			var uriIndex = await readIntProperty(contract, layer, KEY_STATES, "Layer Index", masterArtTokenId);
 
 			layer = layer[KEY_STATES].options[uriIndex];
@@ -328,6 +331,22 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 
 			if (shouldMultiply) {				
 				compositeOptions.mode = Jimp.BLEND_MULTIPLY;
+			}			
+		}
+
+		if (KEY_LIGHTEN in layer[KEY_COLOR]) {
+			var shouldLighten = ((await readIntProperty(contract, layer[KEY_COLOR], KEY_LIGHTEN, "Layer Color Should Lighten", masterArtTokenId)) > 0);
+
+			if (shouldLighten) {				
+				compositeOptions.mode = Jimp.BLEND_LIGHTEN;
+			}			
+		}
+
+		if (KEY_OVERLAY in layer[KEY_COLOR]) {
+			var shouldOverlay = ((await readIntProperty(contract, layer[KEY_COLOR], KEY_OVERLAY, "Layer Color Should Overlay", masterArtTokenId)) > 0);
+
+			if (shouldOverlay) {				
+				compositeOptions.mode = Jimp.BLEND_OVERLAY;
 			}			
 		}
 	}
