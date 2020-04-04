@@ -9,6 +9,7 @@ const KEY_SCALE = "scale";
 
 const KEY_COLOR = "color";
 const KEY_ALPHA = "alpha";
+const KEY_OPACITY = "opacity";
 const KEY_HUE = "hue";
 
 const KEY_MULTIPLY = "multiply";
@@ -331,6 +332,12 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 
 			if (shouldMultiply) {				
 				compositeOptions.mode = Jimp.BLEND_MULTIPLY;
+
+				if (KEY_OPACITY in layer[KEY_COLOR]) {
+					var opacity = await readIntProperty(contract, layer[KEY_COLOR], KEY_OPACITY, "Layer Multiply Opacity", masterArtTokenId);
+
+					compositeOptions.opacitySource = opacity / 100.0;
+				}
 			}			
 		}
 
@@ -339,6 +346,12 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 
 			if (shouldLighten) {				
 				compositeOptions.mode = Jimp.BLEND_LIGHTEN;
+
+				if (KEY_OPACITY in layer[KEY_COLOR]) {
+					var opacity = await readIntProperty(contract, layer[KEY_COLOR], KEY_OPACITY, "Layer Lighten Opacity", masterArtTokenId);
+
+					compositeOptions.opacitySource = opacity / 100.0;
+				}
 			}			
 		}
 
@@ -347,6 +360,12 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 
 			if (shouldOverlay) {				
 				compositeOptions.mode = Jimp.BLEND_OVERLAY;
+
+				if (KEY_OPACITY in layer[KEY_COLOR]) {
+					var opacity = await readIntProperty(contract, layer[KEY_COLOR], KEY_OPACITY, "Layer Overlay Opacity", masterArtTokenId);
+
+					compositeOptions.opacitySource = opacity / 100.0;
+				}
 			}			
 		}
 	}
