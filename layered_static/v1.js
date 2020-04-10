@@ -84,16 +84,7 @@ async function render(contract, layout, _blockNum, masterArtTokenId) {
 			imageBuffer = null;
 		}		
 
-		if (currentImage == null) {
-			currentImage = layerImage;
-
-			// stamp this for future layers that might be anchored to the base image
-			layer.active = true;
-			layer.finalCenterX = layerImage.bitmap.width / 2;
-			layer.finalCenterY = layerImage.bitmap.height / 2;
-		} else {
-			currentImage = await renderLayer(contract, currentImage, layout, layer, layerImage, masterArtTokenId);
-		}
+		currentImage = await renderLayer(contract, currentImage, layout, layer, layerImage, masterArtTokenId);
 
 		layerImage = null;
 		layer = null;
@@ -370,10 +361,17 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 		}
 	}
 
-	// composite this layer onto the current image
-	currentImage.composite(layerImage, x, y, compositeOptions);
+	if (currentImage != null) {
+		// composite this layer onto the current image
+		currentImage.composite(layerImage, x, y, compositeOptions);
 
-	return currentImage;
+		return currentImage;
+	} else {
+		layer.finalCenterX = bitmapWidth / 2;
+		layer.finalCenterY = bitmapHeight / 2;
+
+		return layerImage;
+	}
 }
 
 exports.render = render;
