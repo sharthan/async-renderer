@@ -279,43 +279,53 @@ async function renderLayer(contract, currentImage, layout, layer, layerImage, ma
 		if (KEY_RED in layer[KEY_COLOR]) {
 			var red = await readIntProperty(contract, layer[KEY_COLOR], KEY_RED, "Layer Color Red", masterArtTokenId); 
 
-			layerImage.color([
-				{
-					apply: 'red', params: [red]
-				}
-			]);
+			if (red != 0) {
+				layerImage.color([
+					{
+						apply: 'red', params: [red]
+					}
+				]);
+			}
 		}
 		if (KEY_GREEN in layer[KEY_COLOR]) {
 			var green = await readIntProperty(contract, layer[KEY_COLOR], KEY_GREEN, "Layer Color Green", masterArtTokenId); 
 
-			layerImage.color([
-				{
-					apply: 'green', params: [green]
-				}
-			]);
+			if (green != 0) {
+				layerImage.color([
+					{
+						apply: 'green', params: [green]
+					}
+				]);
+			}
 		}
 		if (KEY_BLUE in layer[KEY_COLOR]) {
 			var blue = await readIntProperty(contract, layer[KEY_COLOR], KEY_BLUE, "Layer Color Blue", masterArtTokenId); 
 
-			layerImage.color([
-				{
-					apply: 'blue', params: [blue]
-				}
-			]);
+			if (blue != 0) {
+				layerImage.color([
+					{
+						apply: 'blue', params: [blue]
+					}
+				]);
+			}
 		}
 		if (KEY_HUE in layer[KEY_COLOR]) {
 			var hue = await readIntProperty(contract, layer[KEY_COLOR], KEY_HUE, "Layer Color Hue", masterArtTokenId); 
 
-			layerImage.color([
-				{
-					apply: 'hue', params: [hue]
-				}
-			]);
+			if (hue != 0) {
+				layerImage.color([
+					{
+						apply: 'hue', params: [hue]
+					}
+				]);
+			}
 		}
 		if (KEY_ALPHA in layer[KEY_COLOR]) {
 			var alpha = await readIntProperty(contract, layer[KEY_COLOR], KEY_ALPHA, "Layer Color Alpha", masterArtTokenId); 
 
-			layerImage.opacity(alpha / 100);
+			if (alpha < 100) {
+				layerImage.opacity(alpha / 100);
+			}
 		}
 
 		if (KEY_MULTIPLY in layer[KEY_COLOR]) {
