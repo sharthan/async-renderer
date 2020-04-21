@@ -1,4 +1,5 @@
 const renderer = require("./render.js")
+const util = require('util');
 var ethers = require("ethers");
 
 // enforce that a file and token address was provided
@@ -29,7 +30,12 @@ if (process.argv.length > 5) {
 var tokenURI = null;
 if (process.argv.length > 6) {
 	tokenURI = process.argv[6];
-	console.log("Using tokenURI = " + tokenURI)
+
+	if (util.isNullOrUndefined(tokenURI) || tokenURI.length == 0) {
+		tokenURI = null;
+	} else {
+		console.log("Using tokenURI = " + tokenURI)
+	}
 }
 
 function parseBool(val) { return val === true || val === "true" }
