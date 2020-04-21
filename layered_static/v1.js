@@ -41,8 +41,8 @@ function setBufferConnector(_bufferConnector) {
 	bufferConnector = _bufferConnector;
 }
 
-async function render(contract, layout, _blockNum, masterArtTokenId) {
-	blockNum = parseInt(_blockNum);
+async function render(contract, layout, options, masterArtTokenId) {
+	blockNum = parseInt(options.blockNum);
 	masterArtTokenId = parseInt(masterArtTokenId);
 
 	var currentImage = null;
