@@ -38,6 +38,17 @@ if (process.argv.length > 6) {
 	}
 }
 
+var renderCache = null;
+if (process.argv.length > 7) {
+	renderCache = process.argv[7];
+
+	if (util.isNullOrUndefined(renderCache) || renderCache.length == 0) {
+		renderCache = null;
+	} else {
+		console.log("Using render cache = " + renderCache)
+	}
+}
+
 function parseBool(val) { return val === true || val === "true" }
 
 async function main() {
@@ -47,7 +58,8 @@ async function main() {
 	var options = {
 		blockNum : blockNum,
 		stampDebug : parseBool(process.env.STAMP_DEBUG),
-		tokenURI : tokenURI
+		tokenURI : tokenURI,
+		renderCache : renderCache
 	}
 	
 	var finalImageData = await renderer.process(provider, tokenAddress, tokenId, options);

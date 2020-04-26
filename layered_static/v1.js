@@ -2,6 +2,9 @@
 var Jimp = require('jimp');
 var ethers = require("ethers");
 
+const util = require('util');
+const fs = require('fs');
+
 const KEY_FIXED_ROTATION = "fixed-rotation";
 const KEY_ORBIT_ROTATION = "orbit-rotation";
 const KEY_ANCHOR = "anchor";
@@ -47,8 +50,14 @@ async function render(contract, layout, options, masterArtTokenId) {
 
 	var currentImage = null;
 
-	controlTokenCache = {}; // clear the cache before each render
-
+	if (util.isNullOrUndefined(options.renderCache)) {
+		// if no render cache provided then clear the token cache and fetch from contract
+		controlTokenCache = {}; 
+	} else {
+		// if a render cache was provided then read from that
+		controlTokenCache = JSON.parse(fs.readFileSync(options.renderCache));		
+	}
+	
 	for (var i = 0; i < layout.layers.length; i++) {
 		console.log((process.memoryUsage().rss / 1024 / 1024) + " MB");
 
