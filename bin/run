@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+'use strict'
+
+const renderer = require('../lib/render.js')
+const util = require('util');
+
+/// display usage as needed
+if (process.argv.length < 5 || !['chain', 'local'].includes(process.argv[2])) {
+  console.log(`Usage: bin/run chain <tokenAddress> <tokenId> [<blockNum>] [<outputFilePath>]
+       bin/run local <layoutFilePath> <tokenFilePath> <outputFilePath>`);
+  process.exit(1);
+}
+
+/// process command line args per the specified mode
+const mode = process.argv[2];
+
+/// set up default options
+function parseBool(val) { return val === true || val === "true" }
+const options = {
+  stampDebug : parseBool(process.env.STAMP_DEBUG)
+};
+
+if (mode == 'chain') {
+  const [,,, tokenAddress, tokenId, blockNum, outputFilePath] = process.argv;
+  options.blockNum = util.isNullOrUndefined(blockNum) ? -1 : blockNum;
+  options.outputFilePath = util.isNullOrUndefined(outputFilePath) ? `renders/token-${tokenId}_block-${options.blockNum}.jpg` : outputFilePath;
+
+  renderer.renderFromChain(process.env.PROVIDER_URL, tokenAddress, tokenId, options);
+} else if (mode == 'local') {
+  const [,,, layoutFilePath, tokenFilePath, outputFilePath] = process.argv;
+  options.outputFilePath = outputFilePath;
+
+  renderer.renderLocal(layoutFilePath, tokenFilePath, options);
+}
