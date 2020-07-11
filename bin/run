@@ -6,7 +6,7 @@ const util = require('util');
 
 /// display usage as needed
 if (process.argv.length < 5 || !['chain', 'local'].includes(process.argv[2])) {
-  console.log(`Usage: bin/run chain <tokenAddress> <tokenId> [<blockNum>] [<outputFilePath>]
+  console.log(`Usage: bin/run chain <tokenAddress> <fallbackTokenAddress> <tokenId> [<blockNum>] [<outputFilePath>]
        bin/run local <layoutFilePath> <tokenFilePath> <outputFilePath>`);
   process.exit(1);
 }
@@ -21,11 +21,11 @@ const options = {
 };
 
 if (mode == 'chain') {
-  const [,,, tokenAddress, tokenId, blockNum, outputFilePath] = process.argv;
+  const [,,, tokenAddress, fallbackTokenAddress, tokenId, blockNum, outputFilePath] = process.argv;
   options.blockNum = util.isNullOrUndefined(blockNum) ? -1 : blockNum;
   options.outputFilePath = util.isNullOrUndefined(outputFilePath) ? `renders/token-${tokenId}_block-${options.blockNum}.jpg` : outputFilePath;
 
-  renderer.renderFromChain(process.env.PROVIDER_URL, tokenAddress, tokenId, options);
+  renderer.renderFromChain(process.env.PROVIDER_URL, tokenAddress, fallbackTokenAddress, tokenId, options);
 } else if (mode == 'local') {
   const [,,, layoutFilePath, tokenFilePath, outputFilePath] = process.argv;
   options.outputFilePath = outputFilePath;
