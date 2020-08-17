@@ -30,5 +30,5 @@ if (mode == 'chain') {
   const [,,, layoutFilePath, tokenFilePath, outputFilePath] = process.argv;
   options.outputFilePath = outputFilePath;
 
-  renderer.renderLocal(process.env.PROVIDER_URL, layoutFilePath, tokenFilePath, options);
+  renderer.renderLocal(layoutFilePath, tokenFilePath, options);
 }
